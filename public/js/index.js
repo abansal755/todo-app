@@ -116,12 +116,19 @@ function makeTodo(todo){
         if(e.target.classList.contains('delete-btn')) deleteTodo(e.target);
     });
     getFormFromDiv(div).addEventListener('change',async function(){
-        const res = await fetch(`/todos/${getDivFromForm(this).dataset.id}`,{
-            method:'PATCH',
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-            body:`text=${this.value}`
-        });
-        const data = await res.text();
+        try{
+            const res = await fetch(`/todos/${getDivFromForm(this).dataset.id}`,{
+                method:'PATCH',
+                headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+                body:`text=${this.value}`
+            });
+            if(!res.ok){
+                const message  = await res.text();
+                container.append(makeAlert(message,res.status));
+            }
+        }catch{
+            container.append(makeAlert(500,'Internal server error'));
+        }
     });
     return div;
 };
