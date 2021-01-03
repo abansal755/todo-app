@@ -1,0 +1,12 @@
+#container > div.row {
+    display: flex;
+    justify-content: center;
+}
+
+.complete {
+    text-decoration: line-through;
+}
+
+.btn-close {
+    transition: 0.15s;
+}
