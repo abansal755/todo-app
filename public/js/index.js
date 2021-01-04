@@ -33,7 +33,7 @@ addForm.addEventListener('submit',async function(e){
             formInput.value = '';
         }
     }catch{
-        container.append(makeAlert(500,'Internal server error'));
+        container.append(makeAlert('Internal server error',500));
     }
 });
 
@@ -72,7 +72,7 @@ function makeTodo(todo){
                 container.append(makeAlert(message,res.status));
             }
         }catch{
-            container.append(makeAlert(500,'Internal server error'));
+            container.append(makeAlert('Internal server error',500));
         }
     };
     async function deleteTodo(btn){
@@ -88,7 +88,7 @@ function makeTodo(todo){
                 container.append(makeAlert(message,res.status));
             }
         }catch{
-            container.append(makeAlert(500,'Internal server error'));
+            container.append(makeAlert('Internal server error',500));
         }
     };
 
@@ -127,7 +127,7 @@ function makeTodo(todo){
                 container.append(makeAlert(message,res.status));
             }
         }catch{
-            container.append(makeAlert(500,'Internal server error'));
+            container.append(makeAlert('Internal server error',500));
         }
     });
     return div;
