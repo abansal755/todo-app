@@ -23,9 +23,10 @@ const passport = require('passport');
 const PassportLocal = require('passport-local');
 const User = require('./models/User');
 const apiRouter = require('./routes/api');
+const MongoStore = require('connect-mongo');
 
 const database = require('./config/database');
-database();
+database.connect();
 
 app.use(express.json());
 app.use(session({
@@ -36,7 +37,10 @@ app.use(session({
     cookie: {
         httpOnly: true,
         maxAge: 30*24*60*60*1000
-    }
+    },
+    store: MongoStore.create({
+        mongoUrl: database.dbUrl
+    })
 }));
 app.use(passport.initialize());
 app.use(passport.session());

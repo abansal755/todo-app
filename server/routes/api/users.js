@@ -4,6 +4,7 @@ const User = require('../../models/User');
 const AppError = require('../../utils/AppError');
 const middleware = require('../../middleware');
 const passport = require('passport');
+const wrapAsync = require('../../utils/wrapAsync');
 
 router.get('/', middleware.ensureLogin, (req,res) => {
     res.json({
