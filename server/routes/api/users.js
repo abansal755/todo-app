@@ -12,10 +12,10 @@ router.get('/', middleware.ensureLogin, (req,res) => {
     });
 });
 
-router.post('/', middleware.ensureNoLogin, async (req,res,next) => {
+router.post('/', middleware.ensureNoLogin, wrapAsync(async (req,res) => {
     const {username,password} = req.body;
-    if(username === undefined) return next(new AppError('Username not found',400));
-    if(password === undefined) return next(new AppError('Password not found',400));
+    if(username === undefined) throw new AppError('Username not found',400);
+    if(password === undefined) throw new AppError('Password not found',400);
     const user = new User({
         username
     });
@@ -23,17 +23,15 @@ router.post('/', middleware.ensureNoLogin, async (req,res,next) => {
         await User.register(user,password);
     }
     catch(err) {
-        return next(new AppError(err.message,400));
+        throw new AppError(err.message,400);
     }
     req.logIn(user, err => {
-        if(err){
-            return next(err);
-        }
+        if(err) throw err;
         res.json({
             username
         });
     });
-});
+}));
 
 router.post('/login', middleware.ensureNoLogin, (req,res,next) => {
     passport.authenticate('local', (err,user,info) => {

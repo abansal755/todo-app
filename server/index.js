@@ -31,7 +31,7 @@ database.connect();
 app.use(express.json());
 app.use(session({
     name: 'session',
-    secret: process.env.SECRET || 'secret',
+    secret: process.env.COOKIE_SECRET || 'secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -39,7 +39,10 @@ app.use(session({
         maxAge: 30*24*60*60*1000
     },
     store: MongoStore.create({
-        mongoUrl: database.dbUrl
+        mongoUrl: database.dbUrl,
+        crypto: {
+            secret: process.env.STORE_SECRET || 'secret2'
+        }
     })
 }));
 app.use(passport.initialize());
