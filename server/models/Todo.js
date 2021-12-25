@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const todoSchema = new mongoose.Schema({
     text: {
         type: String,
-        required: ''
+        required: true,
+        minlength: 1
     },
     isCompleted: {
         type: Boolean,

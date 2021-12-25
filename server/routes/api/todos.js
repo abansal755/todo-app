@@ -50,15 +50,18 @@ router.delete('/:id', middleware.ensureLogin, middleware.authorizeTodo, wrapAsyn
 }));
 
 router.patch('/:id', middleware.ensureLogin, middleware.authorizeTodo, wrapAsync(async (req,res) => {
-    const {isCompleted} = req.body;
+    const {isCompleted,text} = req.body;
     const {id} = req.params;
-    if(isCompleted === undefined) return next(new AppError('isCompleted not found',400));
-    await Todo.findByIdAndUpdate(id, {
-        isCompleted
+    if(isCompleted === undefined && text === undefined) return next(new AppError('No payload',400));
+    const update = {};
+    if(isCompleted !== undefined) update.isCompleted = isCompleted;
+    if(text !== undefined) update.text = text;
+    await Todo.findByIdAndUpdate(id, update, {
+        runValidators: true
     });
     res.json({
         _id: id,
-        isCompleted
+        ...update
     });
 }));
 

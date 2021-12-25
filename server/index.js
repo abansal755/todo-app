@@ -1,19 +1,23 @@
 /* 
-    GET / home page
-    GET /login login page
-    GET /register register page
-    GET /dashboard dashboard page
-
-    // GET /api/users get user details
-    // POST /api/users register user
-    // POST /api/users/login login user
-    // POST /api/users/logout logout user
+    Routes:
+    GET /api/users get user details
+    POST /api/users register user
+    POST /api/users/login login user
+    POST /api/users/logout logout user
     
-    // GET /api/todos get all todos
-    GET /api/todos/:id gets a specific todo
-    // POST /api/todos create new todo
-    // DELETE /api/todos/:id deleted a specific todo
-    // PATCH /api/todos/:id marks toggles completion
+    GET /api/todos get all todos
+    POST /api/todos create new todo
+    DELETE /api/todos/:id deleted a specific todo
+    PATCH /api/todos/:id marks toggles completion
+*/
+
+/*
+    Env vairables:
+    DB_URL
+    COOKIE_SECRET
+    STORE_SECRET
+    PORT
+    NODE_ENV
 */
 
 const express = require('express');
@@ -24,11 +28,13 @@ const PassportLocal = require('passport-local');
 const User = require('./models/User');
 const apiRouter = require('./routes/api');
 const MongoStore = require('connect-mongo');
+const path = require('path');
 
 const database = require('./config/database');
 database.connect();
 
 app.use(express.json());
+
 app.use(session({
     name: 'session',
     secret: process.env.COOKIE_SECRET || 'secret',
@@ -52,6 +58,13 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use('/api',apiRouter);
+
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname,'../client/build')));
+    app.get('*', (req,res) => {
+        res.sendFile(path.join(__dirname,'../client/build/index.html'));
+    });
+}
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}...`));

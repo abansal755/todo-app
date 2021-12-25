@@ -13,7 +13,10 @@ exports.ensureNoLogin = (req,res,next) => {
 exports.authorizeTodo = (req,res,next) => {
     let found = false;
     for(const _id of req.user.todos){
-        if(_id.toString() === req.params.id) found = true;
+        if(_id.toString() === req.params.id){
+            found = true;
+            break;
+        }
     }
     if(found) next();
     else throw new AppError('Unauthorized',403);

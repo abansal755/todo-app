@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { Fragment, useContext } from 'react';
+import {Switch,Route,Redirect} from 'react-router-dom';
+import Navbar from './components/Navbar';
+import AuthContext from './context/AuthContext';
+import Auth from './pages/Auth';
+import Dashboard from './pages/Dashboard';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+	const authCtx = useContext(AuthContext);
+
+	return (
+		<Fragment>
+			<Navbar/>
+			<div className='container mt-5'>
+				<Switch>
+					<Route path='/' exact>
+						<Redirect to='/dashboard'/>
+					</Route>
+					<Route path='/auth'>
+						{authCtx.isLoggedIn && (
+							<Redirect to='/dashboard'/>
+						)}
+						{!authCtx.isLoggedIn && (
+							<Auth/>
+						)}
+					</Route>
+					<Route path='/dashboard'>
+						{authCtx.isLoggedIn && (
+							<Dashboard/>
+						)}
+						{!authCtx.isLoggedIn && (
+							<Redirect to='/auth'/>
+						)}
+					</Route>
+					<Route path='*'>
+						{/* 404 page */}
+					</Route>
+				</Switch>
+			</div>
+		</Fragment>
+	);
 }
 
 export default App;
