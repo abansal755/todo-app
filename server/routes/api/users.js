@@ -5,6 +5,7 @@ const AppError = require('../../utils/AppError');
 const middleware = require('../../middleware');
 const passport = require('passport');
 const wrapAsync = require('../../utils/wrapAsync');
+const validator = require('validator');
 
 router.get('/', middleware.ensureLogin, (req,res) => {
     res.json({
@@ -14,8 +15,17 @@ router.get('/', middleware.ensureLogin, (req,res) => {
 
 router.post('/', middleware.ensureNoLogin, wrapAsync(async (req,res) => {
     const {username,password} = req.body;
+    
+    // Validating username
     if(username === undefined) throw new AppError('Username not found',400);
+    if(username.length < 6) throw new AppError('Username must be of atleast 6 characters',400);
+    if(!validator.isAlphanumeric(username)) throw new AppError('Username must contain only alphanumeric characters',400);
+
+    // Validating password
     if(password === undefined) throw new AppError('Password not found',400);
+    if(password.length < 6) throw new AppError('Password must be of atleast 6 characters',400);
+    if(!validator.isAlphanumeric(password)) throw new AppError('Password must contain only alphanumeric characters',400);
+    
     const user = new User({
         username
     });

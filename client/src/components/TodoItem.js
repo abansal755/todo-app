@@ -6,6 +6,15 @@ const TodoItem = props => {
     const [text,setText] = useState(props.text);
     const textInputHandler = e => setText(e.target.value);
 
+    const [isEditing,setIsEditing] = useState(false);
+    const enableEditingHandler = () => {
+        setIsEditing(true);
+        setText(props.text);
+    }
+    const disableEditingHandler = () => {
+        setIsEditing(false);
+    }
+
     const http = useHttp();
 
     const textChangeHandler = () => {
@@ -26,6 +35,8 @@ const TodoItem = props => {
                 }
                 return newTodos;
             })
+            setText('');
+            disableEditingHandler();
         })
     }
 
@@ -75,19 +86,37 @@ const TodoItem = props => {
         <div className="row mb-3">
             <div className="col col-lg-6 ms-auto me-auto">
                 <div className="card">
-                    <form className='card-body'>
-                        <textarea className="form-control" value={text} onInput={textInputHandler} disabled={props.isCompleted}/>
-                        <div className="d-flex mt-2">
-                            {http.isComplete === false && (
-                                <div className="spinner-border text-secondary"></div>
-                            )}
-                            <button className="btn btn-success ms-auto me-2" disabled={props.isCompleted || http.isComplete === false} type='button' onClick={textChangeHandler}>Save</button>
-                            <button className="btn btn-warning me-2" type='button' onClick={completeChangeHandler} disabled={http.isComplete === false}>
-                                Mark as {props.isCompleted ? 'incomplete' : 'complete'}
-                            </button>
-                            <button className="btn btn-danger me-2" type='button' onClick={deleteTodoHandler} disabled={http.isComplete === false}>Delete</button>
+                    {!isEditing && (
+                        <div className='card-body'>
+                            <div style={{
+                                textDecoration: props.isCompleted ? 'line-through' : 'none'
+                            }}>
+                                {props.text}
+                            </div>
+                            <div className="d-flex mt-2">
+                                {http.isComplete === false && (
+                                    <div className="spinner-border text-secondary"></div>
+                                )}
+                                <button className="btn btn-success ms-auto me-2" onClick={enableEditingHandler}>Edit</button>
+                                <button className="btn btn-warning me-2" type='button' onClick={completeChangeHandler} disabled={http.isComplete === false}>
+                                    Mark as {props.isCompleted ? 'incomplete' : 'complete'}
+                                </button>
+                                <button className="btn btn-danger" type='button' onClick={deleteTodoHandler} disabled={http.isComplete === false}>Delete</button>
+                            </div>
                         </div>
-                    </form>
+                    )}
+                    {isEditing && (
+                        <form className="card-body">
+                            <textarea className="form-control" value={text} onInput={textInputHandler} disabled={props.isCompleted}/>
+                            <div className="d-flex mt-2">
+                                {http.isComplete === false && (
+                                    <div className="spinner-border text-secondary"></div>
+                                )}
+                                <button className="btn btn-success ms-auto me-2" disabled={props.isCompleted || http.isComplete === false} type='button' onClick={textChangeHandler}>Save</button>
+                                <button className="btn btn-warning" type="button" onClick={disableEditingHandler}>Cancel</button>
+                            </div>
+                        </form>
+                    )}
                 </div>
             </div>
         </div>
