@@ -53,16 +53,12 @@ router.patch('/:id', middleware.ensureLogin, middleware.authorizeTodo, wrapAsync
     const {isCompleted,text} = req.body;
     const {id} = req.params;
     if(isCompleted === undefined && text === undefined) return next(new AppError('No payload',400));
-    const update = {};
-    if(isCompleted !== undefined) update.isCompleted = isCompleted;
-    if(text !== undefined) update.text = text;
-    await Todo.findByIdAndUpdate(id, update, {
-        runValidators: true
-    });
-    res.json({
-        _id: id,
-        ...update
-    });
-}));
+
+    const doc = await Todo.findById(id);
+    if(isCompleted !== undefined) doc.isCompleted = isCompleted;
+    if(text !== undefined) doc.text = text;
+    await doc.save();
+    res.json(doc);
+}))
 
 module.exports = router;
