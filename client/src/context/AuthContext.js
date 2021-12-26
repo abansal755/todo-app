@@ -1,5 +1,6 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import useHttp from "../hooks/useHttp";
+import ErrorContext from "./ErrorContext";
 
 const AuthContext = createContext({
     user: {},
@@ -13,6 +14,7 @@ export const AuthContextProvider = props => {
     const [user,setUser] = useState(null);
     const isLoggedIn = !!user;
     const http = useHttp();
+    const errCtx = useContext(ErrorContext);
 
     const logIn = (username,password) => {
         http.sendRequest({
@@ -25,6 +27,9 @@ export const AuthContextProvider = props => {
         },
         data => {
             setUser(data);
+        },
+        data => {
+            errCtx.addError(data.error.message);
         });
     }
 
@@ -35,6 +40,9 @@ export const AuthContextProvider = props => {
         },
         () => {
             setUser(null);
+        },
+        data => {
+            errCtx.addError(data.error.message);
         })
     }
 
@@ -49,6 +57,9 @@ export const AuthContextProvider = props => {
         },
         data => {
             setUser(data);
+        },
+        data => {
+            errCtx.addError(data.error.message);
         })
     }
 

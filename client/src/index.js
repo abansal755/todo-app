@@ -7,14 +7,17 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {BrowserRouter} from 'react-router-dom';
 import './index.css';
 import { AuthContextProvider } from './context/AuthContext';
+import { ErrorContextProvider } from './context/ErrorContext';
 
 ReactDOM.render(
 	<React.StrictMode>
-		<AuthContextProvider>
-			<BrowserRouter>
-				<App/>
-			</BrowserRouter>
-		</AuthContextProvider>
+		<ErrorContextProvider>
+			<AuthContextProvider>
+				<BrowserRouter>
+					<App/>
+				</BrowserRouter>
+			</AuthContextProvider>
+		</ErrorContextProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
 );

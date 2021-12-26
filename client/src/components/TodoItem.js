@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {cloneDeep} from 'lodash';
 import useHttp from "../hooks/useHttp";
+import ErrorContext from "../context/ErrorContext";
 
 const TodoItem = props => {
     const [text,setText] = useState(props.text);
@@ -16,8 +17,15 @@ const TodoItem = props => {
     }
 
     const http = useHttp();
+    const errCtx = useContext(ErrorContext);
 
-    const textChangeHandler = () => {
+    const textChangeHandler = e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if(!e.target.checkValidity()){
+            e.target.classList.add('was-validated');
+            return;
+        }
         http.sendRequest({
             url: `/api/todos/${props._id}`,
             method: 'PATCH',
@@ -37,6 +45,9 @@ const TodoItem = props => {
             })
             setText('');
             disableEditingHandler();
+        },
+        data => {
+            errCtx.addError(data.error.message);
         })
     }
 
@@ -58,6 +69,9 @@ const TodoItem = props => {
                 }
                 return newTodos;
             })
+        },
+        data => {
+            errCtx.addError(data.error.message);
         })
     }
 
@@ -79,6 +93,9 @@ const TodoItem = props => {
                 newTodos.splice(idx,1);
                 return newTodos;
             })
+        },
+        data => {
+            errCtx.addError(data.error.message);
         })
     }
 
@@ -106,13 +123,16 @@ const TodoItem = props => {
                         </div>
                     )}
                     {isEditing && (
-                        <form className="card-body">
-                            <textarea className="form-control" value={text} onInput={textInputHandler} disabled={props.isCompleted}/>
+                        <form className="card-body" onSubmit={textChangeHandler} noValidate>
+                            <textarea className="form-control" value={text} onInput={textInputHandler} required/>
+                            <div className="invalid-feedback">
+                                Todo text must be atleast 1 character long
+                            </div>
                             <div className="d-flex mt-2">
                                 {http.isComplete === false && (
                                     <div className="spinner-border text-secondary"></div>
                                 )}
-                                <button className="btn btn-success ms-auto me-2" disabled={props.isCompleted || http.isComplete === false} type='button' onClick={textChangeHandler}>Save</button>
+                                <button className="btn btn-success ms-auto me-2" disabled={http.isComplete === false}>Save</button>
                                 <button className="btn btn-warning" type="button" onClick={disableEditingHandler}>Cancel</button>
                             </div>
                         </form>

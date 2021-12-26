@@ -1,5 +1,6 @@
 import { Fragment, useContext } from 'react';
 import {Switch,Route,Redirect} from 'react-router-dom';
+import Errors from './components/Errors';
 import Navbar from './components/Navbar';
 import AuthContext from './context/AuthContext';
 import Auth from './pages/Auth';
@@ -11,7 +12,8 @@ const App = () => {
 	return (
 		<Fragment>
 			<Navbar/>
-			<div className='container mt-5'>
+			<Errors/>
+			<div className='container'>
 				<Switch>
 					<Route path='/' exact>
 						<Redirect to='/dashboard'/>

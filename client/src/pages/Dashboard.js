@@ -1,11 +1,13 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import TodoItem from "../components/TodoItem";
 import useHttp from '../hooks/useHttp';
 import TodoForm from "../components/TodoForm";
+import ErrorContext from "../context/ErrorContext";
 
 const Dashboard = () => {
     const [todos,setTodos] = useState([]);
     const http = useHttp();
+    const errCtx = useContext(ErrorContext);
 
     useEffect(() => {
         http.sendRequest({
@@ -14,6 +16,9 @@ const Dashboard = () => {
         data => {
             data.reverse();
             setTodos(data);
+        },
+        data => {
+            errCtx.addError(data.error.message);
         })
     }, []);
     

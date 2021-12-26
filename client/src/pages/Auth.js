@@ -26,16 +26,16 @@ const Auth = () => {
 
     return (
         <div className="row">
-            <div className="col col-sm-8 col-md-6 col-xl-4 ms-auto me-auto">
+            <div className="col col-lg-6 ms-auto me-auto">
                 <div className="card">
                     <form className="card-body" onSubmit={formSubmitHandler}>
                         <div className="mb-2">
                             <label className='form-label' htmlFor="username">Username</label>
-                            <input className="form-control" id="username" placeholder="Enter username" value={username} onInput={usernameInputHandler} minLength={6} required/>
+                            <input className="form-control" id="username" placeholder="Enter username" value={username} onInput={usernameInputHandler}/>
                         </div>
                         <div className='mb-2'>
                             <label className='form-label' htmlFor="password">Password</label>
-                            <input className="form-control" id="password" placeholder="Enter password" type='password' value={password} onInput={passwordInputHandler} minLength={6} required/>
+                            <input className="form-control" id="password" placeholder="Enter password" type='password' value={password} onInput={passwordInputHandler}/>
                         </div>
                         <a href='' onClick={modeSwitchClickHandler}>
                             {isLoggingIn ? 'Click here to register instead' : 'Click here to login instead'}
