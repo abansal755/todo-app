@@ -3,6 +3,7 @@ import TodoItem from "../components/TodoItem";
 import useHttp from '../hooks/useHttp';
 import TodoForm from "../components/TodoForm";
 import ErrorContext from "../context/ErrorContext";
+import SpinnerCard from '../components/ui/SpinnerCard';
 
 const Dashboard = () => {
     const [todos,setTodos] = useState([]);
@@ -25,17 +26,7 @@ const Dashboard = () => {
     return (
         <Fragment>
             <TodoForm setTodos={setTodos}/>
-            {http.isComplete === false && (
-                <div className="row">
-                    <div className="col col-lg-6 ms-auto me-auto">
-                        <div className="card">
-                            <div className="card-body d-flex justify-content-center">
-                                <div className="spinner-border" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {http.isComplete === false && <SpinnerCard/>}
             {http.isComplete && (
                 todos.map(todo => (
                     <TodoItem
