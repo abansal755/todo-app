@@ -1,11 +1,13 @@
-import { Fragment, lazy, Suspense, useContext } from 'react';
+import { Fragment, Suspense, useContext } from 'react';
 import {Switch,Route,Redirect} from 'react-router-dom';
 import Errors from './components/Errors';
 import Navbar from './components/Navbar';
 import AuthContext from './context/AuthContext';
 import SpinnerCard from './components/ui/SpinnerCard';
-const Auth = lazy(() => import('./pages/Auth'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
+import lazyWithPreload from './utils/lazyWithPreload';
+
+const Auth = lazyWithPreload(() => import('./pages/Auth'));
+const Dashboard = lazyWithPreload(() => import('./pages/Dashboard'));
 
 const App = () => {
 	const authCtx = useContext(AuthContext);
