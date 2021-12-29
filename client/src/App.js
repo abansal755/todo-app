@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import AuthContext from './context/AuthContext';
 import SpinnerCard from './components/ui/SpinnerCard';
 import lazyWithPreload from './utils/lazyWithPreload';
+import NotFound from './pages/NotFound';
 
 const Auth = lazyWithPreload(() => import('./pages/Auth'));
 const Dashboard = lazyWithPreload(() => import('./pages/Dashboard'));
@@ -17,8 +18,8 @@ const App = () => {
 			<Navbar/>
 			<Errors/>
 			<div className='container'>
-				<Switch>
-					<Suspense fallback={<SpinnerCard/>}>
+				<Suspense fallback={<SpinnerCard/>}>
+					<Switch>
 						<Route path='/' exact>
 							<Redirect to='/dashboard'/>
 						</Route>
@@ -39,10 +40,10 @@ const App = () => {
 							)}
 						</Route>
 						<Route path='*'>
-							{/* 404 page */}
+							<NotFound/>
 						</Route>
-					</Suspense>
-				</Switch>
+					</Switch>
+				</Suspense>
 			</div>
 		</Fragment>
 	);
